@@ -28,8 +28,13 @@ def responseToDict(response): #Function to connect to database
 
 #Functionality functions
 
-def checkPassword(UserName,enteredPassword):
+def checkUser(enteredUserName):
+    if len(responseToDict(DBLink.execute(f"SELECT * FROM Users WHERE UserName = '{enteredUserName}'")))>0: #If entered username is found in the database
+        return True
+    else:
+        return False
 
+def checkPassword(UserName,enteredPassword):
     if responseToDict(DBLink.execute(f"SELECT * FROM Users WHERE UserName = '{UserName}'"))[0].get('UserPwd') == enteredPassword: #If entered password equals the one in database
         return True
     else:

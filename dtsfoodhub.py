@@ -22,12 +22,16 @@ class MainWindow(QMainWindow):
         self.show_login_screen()
 
     def show_login_screen(self):
+        """
+        Display the login page.
+        Makes call to login function to authenticate the user to the database.
+        """
         self.loginScr = QWidget()
         self.ui = Ui_loginScr() # From Qt Designer
         self.ui.setupUi(self.loginScr)
         self.loginScr.show()
 
-        # dataRetrieveDB.connectToDB() # Connect to the database before user attempts to log in
+        dataRetrieveDB.connectToDB() # Connect to the database before user attempts to log in
 
         # on click for the "confirm" button -> call the login func to authenticate with DB
         self.ui.btnConfim.clicked.connect(self.login)
@@ -49,10 +53,9 @@ class MainWindow(QMainWindow):
         User authenticates against the database. Uses the functions from the SQL Connection Layer.
         """
 
-        # Testing without using the SQL functions first (temporary)
-
-        if self.ui.editboxUsr.text() == 'test' and self.ui.editboxPass.text() == 'test':
-        #if dataRetrieveDB.checkUser(self.ui.editboxUsr.text()) and dataRetrieveDB.checkPassword(self.ui.editboxUsr.text(), self.ui.editboxPass.text()):
+        # Using the SQL Connectivity Layer functions to check if the user exists in the database 
+        # and check whether their password is correct.
+        if dataRetrieveDB.checkUser(self.ui.editboxUsr.text()) and dataRetrieveDB.checkPassword(self.ui.editboxUsr.text(), self.ui.editboxPass.text()):
             message = QMessageBox()
             message.setText("Logged in.")
             message.exec_()

@@ -2,9 +2,7 @@
 
 class dbinfo :          # Setting variables to be used by the other application components
     database_name = 'nfhcw2'
-    db_server = 'WIN10-2020\SQLEXPRESS'
-    username = 'hruser'
-    password = 'hruserpwd'
+    db_server = '\SQLEXPRESS'
     adminuser = 'hrtest'
     adminpwd = 'hrtest'
     connection_count = 0 # Used to count the number of connections to the database

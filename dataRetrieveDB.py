@@ -2,7 +2,6 @@
 
 import pyodbc
 import socket
-from global_vars import dbinfo
 
 def connectToDB(): #Function to connect to database
     DeviceName = str(socket.gethostname()) #Get device name to access local SQL server

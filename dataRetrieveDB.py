@@ -39,5 +39,3 @@ def checkPassword(UserName,enteredPassword):
         return True
     else:
         return False
-
-print("fh")

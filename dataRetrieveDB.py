@@ -50,3 +50,21 @@ def getStockCategories():
     query = "SELECT id, stockcategory, displayorder FROM StockCategory"
     result = responseToDict(DBLink.execute(query))
     return result
+
+def deleteStockCategory(id):
+    DBLink.execute(f"DELETE FROM StockCategory WHERE id = '{id}'")
+    
+def updateStockCategory(id,category,displayOrder):
+    DBLink.execute(f"UPDATE StockCategory SET stockcategory = '{category}', displayorder = {displayOrder} WHERE id = '{id}'")
+    
+def addStockCategory(id, category, displayOrder):
+    DBLink.execute(f"INSERT INTO StockCategory VALUES ('{id}','{category}','{displayOrder}')")
+    
+def deleteStockItem(id):
+    DBLink.execute(f"DELETE FROM StockItem WHERE id = '{id}'")
+    
+def updateStockItem(id,name,unit,price,categoryid,available,info):
+    DBLink.execute(f"UPDATE StockItem SET itemname = '{name}', itemunit = '{unit}', itemprice = '{price}', categoryid = '{categoryid}', available = '{available}', itemaddinfo = '{info}' WHERE id = '{id}'")
+    
+def addStockItem(id,name,unit,price,categoryid,available,info):
+    DBLink.execute(f"INSERT INTO StockItem VALUES ('{id}','{name}','{unit}','{price}','{categoryid}','{available}','{info}')")

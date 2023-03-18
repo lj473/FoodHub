@@ -2,6 +2,7 @@
 # Updated by 720085401 on 13/03/2023 for dtsfoodhub
 
 from PyQt5.QtWidgets import *
+import PyQt5.QtWidgets
 import dataRetrieveDB
 from loginScr import Ui_loginScr # Import login screen class from Qt
 from homeScr import Ui_homeScr # Import home screen class from Qt
@@ -40,12 +41,39 @@ class MainWindow(QMainWindow):
         self.homeScr = QWidget() 
         self.home_ui = Ui_homeScr() # From Qt Designer
         self.home_ui.setupUi(self.homeScr)
+        self.home_ui.SC_table.setEditTriggers(PyQt5.QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.home_ui.SC_table.cellClicked.connect(self.SCtableSelect)
+        self.home_ui.SC_plusBtn.clicked.connect(self.SCaddMode)
+        self.home_ui.SC_addBtn.setHidden(True)
+        self.home_ui.SC_deleteBtn.setHidden(True)
+        self.home_ui.SC_updateBtn.setHidden(True)
 
         # Change this later so that it only loads the items when the user is in the selected tab
         self.load_stock_categories() 
         self.load_stock_items() 
 
         self.homeScr.show()
+    
+    def SCaddMode(self):
+        self.home_ui.SC_addBtn.setHidden(False)
+        self.home_ui.SC_deleteBtn.setHidden(True)
+        self.home_ui.SC_updateBtn.setHidden(True)
+        
+        self.home_ui.SC_IdEbox.setPlainText(str(len(dataRetrieveDB.getStockCategories())+1))
+        self.home_ui.SC_stockCatEbox.setPlainText("")
+        self.home_ui.SC_spinBox.clear()
+    
+    def SCtableSelect(self,row,column):
+        self.home_ui.SC_addBtn.setHidden(True)
+        self.home_ui.SC_deleteBtn.setHidden(False)
+        self.home_ui.SC_updateBtn.setHidden(False)
+        id = self.home_ui.SC_table.item(row,0).text()
+        category = self.home_ui.SC_table.item(row,1).text()
+        displayOrder = self.home_ui.SC_table.item(row,2).text()
+        
+        self.home_ui.SC_IdEbox.setPlainText(id)
+        self.home_ui.SC_stockCatEbox.setPlainText(category)
+        self.home_ui.SC_spinBox.setValue(int(displayOrder))
     
     def login(self):
         """

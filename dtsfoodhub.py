@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
         self.login_ui.editboxUsr.setText('nfhtest') # ONLY FOR TESTING
         self.login_ui.editboxPass.setText('nfhtestpwd') # ONLY FOR TESTING
 
-        dataRetrieveDB.connectToDB() # Connect to the database before user attempts to log in
+        
 
         # on click for the "confirm" button -> call the login func to authenticate with DB
         self.login_ui.btnConfim.clicked.connect(self.login)
@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
     def show_home_screen(self):
         """
         Display the home page.
-        Currently the code will fail due to homeScr.py line 397, 
+        Currently the code will fail due to homeScr.py line 394, 
         (if you temporarily remove that line from homeScr.py the code will work)
         """
         # Once we are logged in we can show the Home Screen
@@ -74,6 +74,12 @@ class MainWindow(QMainWindow):
     def load_stock_items(self):
         # Stock items
         stock_items = dataRetrieveDB.getStockItems()
+        
+        # Setup drop down to select category
+        stock_categories = dataRetrieveDB.getStockCategories() 
+        for i in stock_categories:
+            self.home_ui.SI_categoryCbox.addItem(i["stockcategory"])
+            
         row = 0
         self.home_ui.SI_table.setRowCount(len(stock_items))
         for item in stock_items: # Inserting them into our QTableWidget with a grid-like structure
@@ -101,6 +107,7 @@ class MainWindow(QMainWindow):
             row += 1
 
 def main():
+    dataRetrieveDB.connectToDB() # Connect to the database before user attempts to log in
     app = QApplication([])
     window = MainWindow()
     app.exec()

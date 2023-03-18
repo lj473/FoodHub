@@ -42,7 +42,7 @@ def checkPassword(UserName,enteredPassword):
         return False
 
 def getStockItems():
-    query = "SELECT StockItem.id, itemname, itemunit, itemprice, stockcategory, available, itemaddlinfo FROM StockItem INNER JOIN StockCategory ON StockItem.categoryid=StockCategory.id"
+    query = "SELECT StockItem.id, itemname, itemunit, itemprice, stockcategory, available, itemaddlinfo FROM StockItem INNER JOIN StockCategory ON StockItem.categoryid=StockCategory.id ORDER BY displayorder"
     result = responseToDict(DBLink.execute(query))
     return result
 

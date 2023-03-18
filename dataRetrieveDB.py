@@ -1,4 +1,5 @@
 # Created by 720018271 on 10/03/2023 for dtsfoodhub
+# Updated by 720085401 on 17/03/2023 for dtsfoodhub
 
 import pyodbc
 import socket
@@ -39,3 +40,13 @@ def checkPassword(UserName,enteredPassword):
         return True
     else:
         return False
+
+def getStockItems():
+    query = "SELECT StockItem.id, itemname, itemunit, itemprice, stockcategory, available, itemaddlinfo FROM StockItem INNER JOIN StockCategory ON StockItem.categoryid=StockCategory.id"
+    result = responseToDict(DBLink.execute(query))
+    return result
+
+def getStockCategories():
+    query = "SELECT id, stockcategory, displayorder FROM StockCategory"
+    result = responseToDict(DBLink.execute(query))
+    return result

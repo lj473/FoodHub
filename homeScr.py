@@ -391,7 +391,7 @@ class Ui_homeScr(object):
         self.gridLayout_4.addLayout(self.SI_downLayout, 3, 0, 1, 1)
         self.tabMenus.addTab(self.stock_itemTab, "")
         self.gridLayout.addWidget(self.tabMenus, 0, 0, 1, 1)
-        homeScr.setCentralWidget(self.homeScrGrid)
+        # homeScr.setCentralWidget(self.homeScrGrid) # This line seems to cause issues if present whilst not causing issues when commented out
 
         #self.SI_cancelBtn1.clicked.connect(sys.exit(app.exec_()))
 
@@ -432,7 +432,7 @@ class Ui_homeScr(object):
         item.setText(_translate("homeScr", "Availability"))
         item = self.SI_table.horizontalHeaderItem(6)
         item.setText(_translate("homeScr", "Additional Information"))
-        self.SI_categoryCbox.addItem("Category Select") # Default
+        
         self.SI_availCbox.setItemText(0, _translate("homeScr", "Availability Select")) # Default 
         self.SI_availCbox.setItemText(1, _translate("homeScr", "Available"))
         self.SI_availCbox.setItemText(2, _translate("homeScr", "Not Available"))

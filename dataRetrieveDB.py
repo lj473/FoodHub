@@ -53,18 +53,33 @@ def getStockCategories():
 
 def deleteStockCategory(id):
     DBLink.execute(f"DELETE FROM StockCategory WHERE id = '{id}'")
+    DBLink.commit()
     
 def updateStockCategory(id,category,displayOrder):
     DBLink.execute(f"UPDATE StockCategory SET stockcategory = '{category}', displayorder = {displayOrder} WHERE id = '{id}'")
+    DBLink.commit()
     
-def addStockCategory(id, category, displayOrder):
-    DBLink.execute(f"INSERT INTO StockCategory VALUES ('{id}','{category}','{displayOrder}')")
+def addStockCategory(category, displayOrder):
+    DBLink.execute(f"BEGIN TRANSACTION INSERT INTO StockCategory (stockcategory, displayorder) VALUES ('{category}',{displayOrder}) COMMIT TRANSACTION")
+    DBLink.commit()
     
 def deleteStockItem(id):
     DBLink.execute(f"DELETE FROM StockItem WHERE id = '{id}'")
+    DBLink.commit()
     
 def updateStockItem(id,name,unit,price,categoryid,available,info):
-    DBLink.execute(f"UPDATE StockItem SET itemname = '{name}', itemunit = '{unit}', itemprice = '{price}', categoryid = '{categoryid}', available = '{available}', itemaddinfo = '{info}' WHERE id = '{id}'")
+    DBLink.execute(f"UPDATE StockItem SET itemname = '{name}', itemunit = '{unit}', itemprice = '{price}', categoryid = '{categoryid}', available = '{available}', itemaddlinfo = '{info}' WHERE id = '{id}'")
+    DBLink.commit()
     
-def addStockItem(id,name,unit,price,categoryid,available,info):
-    DBLink.execute(f"INSERT INTO StockItem VALUES ('{id}','{name}','{unit}','{price}','{categoryid}','{available}','{info}')")
+def addStockItem(name,unit,price,categoryid,available,info):
+    DBLink.execute(f"INSERT INTO StockItem (itemname, itemunit, itemprice, available, categoryid, itemaddlinfo) VALUES ('{name}','{unit}','{price}','{available}','{categoryid}','{info}')")
+    DBLink.commit()
+
+def getCategoryId(category_name):
+    category_id = (responseToDict(DBLink.execute(f"SELECT id FROM StockCategory WHERE stockcategory = '{category_name}'")))[0]['id']
+    return category_id
+
+def getNextId(type):
+    table = 'StockCategory' if type == 'SC' else 'StockItem'
+    last_id = (responseToDict(DBLink.execute(f"SELECT IDENT_CURRENT('{table}') as [id];")))[0]['id']
+    return last_id

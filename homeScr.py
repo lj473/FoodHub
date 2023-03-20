@@ -391,7 +391,7 @@ class Ui_homeScr(object):
         self.gridLayout_4.addLayout(self.SI_downLayout, 3, 0, 1, 1)
         self.tabMenus.addTab(self.stock_itemTab, "")
         self.gridLayout.addWidget(self.tabMenus, 0, 0, 1, 1)
-        homeScr.setCentralWidget(self.homeScrGrid)
+        # homeScr.setCentralWidget(self.homeScrGrid) # This line seems to cause issues if present whilst not causing issues when commented out
 
         #self.SI_cancelBtn1.clicked.connect(sys.exit(app.exec_()))
 

@@ -68,7 +68,7 @@ def deleteStockItem(id):
     DBLink.commit()
     
 def updateStockItem(id,name,unit,price,categoryid,available,info):
-    DBLink.execute(f"UPDATE StockItem SET itemname = '{name}', itemunit = '{unit}', itemprice = '{price}', categoryid = '{categoryid}', available = '{available}', itemaddinfo = '{info}' WHERE id = '{id}'")
+    DBLink.execute(f"UPDATE StockItem SET itemname = '{name}', itemunit = '{unit}', itemprice = '{price}', categoryid = '{categoryid}', available = '{available}', itemaddlinfo = '{info}' WHERE id = '{id}'")
     DBLink.commit()
     
 def addStockItem(name,unit,price,categoryid,available,info):

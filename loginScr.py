@@ -113,7 +113,7 @@ class Ui_loginScr(object):
         self.lblLogin.setText(_translate("loginScr", "Food Hub - Login:"))
         self.lblUsr.setText(_translate("loginScr", "Username:"))
         self.lblPass.setText(_translate("loginScr", "Password:"))
-        self.btnClear.setText(_translate("loginScr", "Clear"))
+        self.btnClear.setText(_translate("loginScr", "Cancel"))
         self.btnConfim.setText(_translate("loginScr", "Confirm"))
 
 

@@ -27,6 +27,7 @@ class MainWindow(QMainWindow):
 
         # On click for the "confirm" button -> call the login func to authenticate with DB
         self.login_ui.btnConfim.clicked.connect(self.login)
+        self.login_ui.btnClear.clicked.connect(self.loginScr.close)
 
     def show_home_screen(self):
         """
@@ -105,6 +106,7 @@ class MainWindow(QMainWindow):
         id = self.home_ui.SC_IdEbox.toPlainText()
         dataRetrieveDB.deleteStockCategory(id)
         self.load_stock_categories() # Refreshing values in the table to ensure parity with db
+        self.load_stock_items() 
 
     def SCupdateCategory(self):
         id = self.home_ui.SC_IdEbox.toPlainText()
@@ -112,6 +114,7 @@ class MainWindow(QMainWindow):
         displayOrder = self.home_ui.SC_spinBox.value()
         dataRetrieveDB.updateStockCategory(id, category, displayOrder)
         self.load_stock_categories() # Refreshing values in the table to ensure parity with db
+        self.load_stock_items()
 
     def SCaddCategory(self):
         category = self.home_ui.SC_stockCatEbox.toPlainText()
@@ -119,6 +122,7 @@ class MainWindow(QMainWindow):
         dataRetrieveDB.addStockCategory(category, displayOrder)
         self.load_stock_categories() # Refreshing values in the table to ensure parity with db
         self.SCaddMode()
+        self.load_stock_items()
 
     def SIaddMode(self):
         # Changing mode by hiding specific buttons
@@ -167,7 +171,7 @@ class MainWindow(QMainWindow):
         id = self.home_ui.SI_idEbox.toPlainText()
         item_name = self.home_ui.SI_itemNameEbox.toPlainText()
         item_unit = self.home_ui.SI_itemUnitEbox.toPlainText()
-        item_price = self.home_ui.SI_itemPriceEbox.toPlainText("")
+        item_price = self.home_ui.SI_itemPriceEbox.toPlainText()
         categoryid = dataRetrieveDB.getCategoryId(self.home_ui.SI_categoryCbox.currentText())
         availability = 'Y' if self.home_ui.SI_availCbox.currentText() == 'Available' else 'N'
         addtl_info = self.home_ui.SI_addInfoEbox.toPlainText()
@@ -179,7 +183,7 @@ class MainWindow(QMainWindow):
         id = self.home_ui.SI_idEbox.toPlainText()
         item_name = self.home_ui.SI_itemNameEbox.toPlainText()
         item_unit = self.home_ui.SI_itemUnitEbox.toPlainText()
-        item_price = self.home_ui.SI_itemPriceEbox.toPlainText("")
+        item_price = self.home_ui.SI_itemPriceEbox.toPlainText()
         categoryid = dataRetrieveDB.getCategoryId(self.home_ui.SI_categoryCbox.currentText())
         availability = 'Y' if self.home_ui.SI_availCbox.currentText() == 'Available' else 'N'
         addtl_info = self.home_ui.SI_addInfoEbox.toPlainText()
@@ -216,6 +220,8 @@ class MainWindow(QMainWindow):
         stock_items = dataRetrieveDB.getStockItems()
         
         # Setup drop down to select category
+        self.home_ui.SI_categoryCbox.clear()
+        self.home_ui.SI_categoryCbox.addItem("Category Select") # Default
         stock_categories = dataRetrieveDB.getStockCategories() 
         for i in stock_categories:
             self.home_ui.SI_categoryCbox.addItem(i["stockcategory"])

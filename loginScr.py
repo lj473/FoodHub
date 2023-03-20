@@ -68,6 +68,7 @@ class Ui_loginScr(object):
         font.setPointSize(11)
         self.editboxPass.setFont(font)
         self.editboxPass.setObjectName("editboxPass")
+        self.editboxPass.setEchoMode(QtWidgets.QLineEdit.Password)
         self.passLayout.addWidget(self.editboxPass)
         self.credentialLayout.addLayout(self.passLayout, 1, 0, 1, 1)
         self.loginScrGrid.addLayout(self.credentialLayout, 0, 0, 1, 1)

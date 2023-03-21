@@ -93,7 +93,7 @@ class MainWindow(QMainWindow):
         self.home_ui.SC_updateBtn.setHidden(True)
         
         # Setting up the default values
-        self.home_ui.SC_IdEbox.setPlainText(str(dataRetrieveDB.getNextId(type='SC') + 1)) # This logic won't work if values get deleted as there will be repeating id's
+        self.home_ui.SC_IdEbox.setPlainText(str(dataRetrieveDB.getCurrentId(type='SC') + 1)) # This logic won't work if values get deleted as there will be repeating id's
         self.home_ui.SC_stockCatEbox.setPlainText("")
         self.home_ui.SC_spinBox.setValue(0)
     
@@ -167,7 +167,7 @@ class MainWindow(QMainWindow):
         self.home_ui.SI_updateBtn1.setHidden(True)
 
         # Setting up the default values
-        self.home_ui.SI_idEbox.setPlainText(str(dataRetrieveDB.getNextId(type='SI') + 1)) # This logic won't work if values get deleted as there will be repeating id's
+        self.home_ui.SI_idEbox.setPlainText(str(dataRetrieveDB.getCurrentId(type='SI') + 1)) # This logic won't work if values get deleted as there will be repeating id's
         self.home_ui.SI_itemNameEbox.setPlainText("")
         self.home_ui.SI_itemUnitEbox.setPlainText("")
         self.home_ui.SI_itemPriceEbox.setPlainText("")
@@ -211,6 +211,7 @@ class MainWindow(QMainWindow):
         '''
         id = self.home_ui.SI_idEbox.toPlainText()
         dataRetrieveDB.deleteStockItem(id)
+        self.load_stock_items() # Refreshing the items in the table 
 
     def SIupdateItem(self):
         '''
@@ -228,6 +229,7 @@ class MainWindow(QMainWindow):
 
         # Using SQL connectivity layer function to update the record
         dataRetrieveDB.updateStockItem(id, item_name, item_unit, item_price, categoryid, availability, addtl_info)
+        self.load_stock_items() # Refreshing the items in the table
 
     def SIaddItem(self):
         '''
@@ -245,6 +247,7 @@ class MainWindow(QMainWindow):
 
         # Using SQL connectivity layer function to add the record
         dataRetrieveDB.addStockItem(id, item_name, item_unit, item_price, categoryid, availability, addtl_info)
+        self.load_stock_items() # Refreshing the items in the table
     
     def login(self):
         """
@@ -319,7 +322,10 @@ if __name__ == "__main__":
     '''
     Initialises the application with a main call to our PyQt5Widget
     '''
-    dataRetrieveDB.connectToDB() # Connect to the database before user attempts to log in
-    app = QApplication([])
-    window = MainWindow()
-    app.exec()
+    try:
+        dataRetrieveDB.connectToDB() # Connect to the database before user attempts to log in
+        app = QApplication([])
+        window = MainWindow()
+        app.exec()
+    except:
+        print("Login to database failed, please make sure the database is connected properly")

@@ -59,6 +59,7 @@ class MainWindow(QMainWindow):
         # Allowing the user to exit the program through the 'Cancel' button
         self.home_ui.SC_cancelBtn.clicked.connect(self.homeScr.close)
 
+
         # Setting up Stock Items tab and assigning slots to signals
         self.home_ui.SI_table.setEditTriggers(QAbstractItemView.NoEditTriggers) # Stops the user from double-clicking to edit the table
         self.home_ui.SI_table.cellClicked.connect(self.SItableSelect)
@@ -278,6 +279,7 @@ class MainWindow(QMainWindow):
         '''
         Gets the records for StockItems in the database and puts the values into the table to display to the user.
         '''
+
         # Getting a list of our stock items
         stock_items = dataRetrieveDB.getStockItems()
         
@@ -303,6 +305,9 @@ class MainWindow(QMainWindow):
             self.home_ui.SI_table.setItem(row, 5,  QTableWidgetItem(item['available']))
             self.home_ui.SI_table.setItem(row, 6,  QTableWidgetItem(item['itemaddlinfo']))
             row += 1
+        # Hiding availability and additional info columns as instructed in requirements
+        self.home_ui.SI_table.hideColumn(5)
+        self.home_ui.SI_table.hideColumn(6)
     
     def load_stock_categories(self):
         '''

@@ -158,6 +158,9 @@ class MainWindow(QMainWindow):
             dataRetrieveDB.addStockCategory(category, displayOrder)
             
             self.load_stock_categories() # Refreshing values in the table to ensure parity with db
+
+            # Decided not to have a separate message box but rather use the input boxes as an indicator to the user 
+            # that their operation was executed.
             self.SCaddMode()
             self.load_stock_items() # Refreshing the data in the comboBox for Categories (in the StockItems tab)
         except:
@@ -259,6 +262,9 @@ class MainWindow(QMainWindow):
             # Using SQL connectivity layer function to add the record
             dataRetrieveDB.addStockItem(item_name, item_unit, item_price, categoryid, availability, addtl_info)
             self.load_stock_items() # Refreshing the items in the table
+
+            # Decided not to have a separate message box but rather use the input boxes as an indicator to the user 
+            # that their operation was executed.
             self.SIaddMode()
         except:
             self.input_error_msg()

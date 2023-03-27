@@ -22,8 +22,6 @@ class MainWindow(QMainWindow):
         self.login_ui = Ui_loginScr() # From Qt Designer
         self.login_ui.setupUi(self.loginScr)
         self.loginScr.show()
-        self.login_ui.editboxUsr.setText('nfhtest') # ONLY FOR TESTING
-        self.login_ui.editboxPass.setText('nfhtestpwd') # ONLY FOR TESTING
 
         # Call the login function to authenticate using the credentials provided by the user
         self.login_ui.btnConfim.clicked.connect(self.login)
@@ -127,7 +125,8 @@ class MainWindow(QMainWindow):
         id = self.home_ui.SC_IdEbox.toPlainText()
         dataRetrieveDB.deleteStockCategory(id)
         self.load_stock_categories() # Refreshing values in the table to ensure parity with db
-        self.load_stock_items() 
+        self.load_stock_items() # Refreshing Category Combo Box for Stock items with the changes
+        self.SCaddMode()
 
     def SCupdateCategory(self):
         '''
@@ -135,12 +134,16 @@ class MainWindow(QMainWindow):
         Calling the updateStockCategory function from our SQL connectivity layer to update the record selected by the user with the information changed on the 
         edit boxes or spin box
         '''
-        id = self.home_ui.SC_IdEbox.toPlainText()
-        category = self.home_ui.SC_stockCatEbox.toPlainText()
-        displayOrder = self.home_ui.SC_spinBox.value()
-        dataRetrieveDB.updateStockCategory(id, category, displayOrder)
-        self.load_stock_categories() # Refreshing values in the table to ensure parity with db
-        self.load_stock_items()
+        try: # To catch errors interacting with the database without breaking the UI
+            # Declaring variables with data input by the user in the boxes
+            id = self.home_ui.SC_IdEbox.toPlainText()
+            category = self.home_ui.SC_stockCatEbox.toPlainText()
+            displayOrder = self.home_ui.SC_spinBox.value()
+            dataRetrieveDB.updateStockCategory(id, category, displayOrder)
+            self.load_stock_categories() # Refreshing values in the table to ensure parity with db
+            self.load_stock_items()
+        except:
+            self.input_error_msg()
 
     def SCaddCategory(self):
         '''
@@ -148,14 +151,17 @@ class MainWindow(QMainWindow):
         Calling the addStockCategory function from our SQL connectivity layer to create a record with the information entered on the 
         edit boxes or spin box by the user (the id is automatically generated for data integrity)
         '''
-        # Declaring variables with data input by the user in the boxes
-        category = self.home_ui.SC_stockCatEbox.toPlainText()
-        displayOrder = self.home_ui.SC_spinBox.value()
-        dataRetrieveDB.addStockCategory(category, displayOrder)
-        
-        self.load_stock_categories() # Refreshing values in the table to ensure parity with db
-        self.SCaddMode()
-        self.load_stock_items() # Refreshing the data in the comboBox for Categories (in the StockItems tab)
+        try: # To catch errors interacting with the database without breaking the UI
+            # Declaring variables with data input by the user in the boxes
+            category = self.home_ui.SC_stockCatEbox.toPlainText()
+            displayOrder = self.home_ui.SC_spinBox.value()
+            dataRetrieveDB.addStockCategory(category, displayOrder)
+            
+            self.load_stock_categories() # Refreshing values in the table to ensure parity with db
+            self.SCaddMode()
+            self.load_stock_items() # Refreshing the data in the comboBox for Categories (in the StockItems tab)
+        except:
+            self.input_error_msg()
 
     def SIaddMode(self):
         '''
@@ -213,6 +219,7 @@ class MainWindow(QMainWindow):
         id = self.home_ui.SI_idEbox.toPlainText()
         dataRetrieveDB.deleteStockItem(id)
         self.load_stock_items() # Refreshing the items in the table 
+        self.SIaddMode()
 
     def SIupdateItem(self):
         '''
@@ -220,35 +227,52 @@ class MainWindow(QMainWindow):
         Calling the updateStockCategory function from our SQL connectivity layer to update the record selected by the user with the information changed on the 
         edit boxes or combo boxes
         '''
-        id = self.home_ui.SI_idEbox.toPlainText()
-        item_name = self.home_ui.SI_itemNameEbox.toPlainText()
-        item_unit = self.home_ui.SI_itemUnitEbox.toPlainText()
-        item_price = self.home_ui.SI_itemPriceEbox.toPlainText()
-        categoryid = dataRetrieveDB.getCategoryId(self.home_ui.SI_categoryCbox.currentText()) # Due to manipulation we have to get the id from the category name
-        availability = 'Y' if self.home_ui.SI_availCbox.currentText() == 'Available' else 'N'
-        addtl_info = self.home_ui.SI_addInfoEbox.toPlainText()
+        try: # To catch errors interacting with the database without breaking the UI
+            id = self.home_ui.SI_idEbox.toPlainText()
+            item_name = self.home_ui.SI_itemNameEbox.toPlainText()
+            item_unit = self.home_ui.SI_itemUnitEbox.toPlainText()
+            item_price = self.home_ui.SI_itemPriceEbox.toPlainText()
+            categoryid = dataRetrieveDB.getCategoryId(self.home_ui.SI_categoryCbox.currentText()) # Due to manipulation we have to get the id from the category name
+            availability = 'Y' if self.home_ui.SI_availCbox.currentText() == 'Available' else 'N'
+            addtl_info = self.home_ui.SI_addInfoEbox.toPlainText()
 
-        # Using SQL connectivity layer function to update the record
-        dataRetrieveDB.updateStockItem(id, item_name, item_unit, item_price, categoryid, availability, addtl_info)
-        self.load_stock_items() # Refreshing the items in the table
-
+            # Using SQL connectivity layer function to update the record
+            dataRetrieveDB.updateStockItem(id, item_name, item_unit, item_price, categoryid, availability, addtl_info)
+            self.load_stock_items() # Refreshing the items in the table
+        except:
+            self.input_error_msg()
+        
     def SIaddItem(self):
         '''
         Stock Items:
         Calling the addStockCategory function from our SQL connectivity layer to create a record with the information entered on the 
         edit boxes or spin box by the user (the id is automatically generated for data integrity)
         '''
-        id = self.home_ui.SI_idEbox.toPlainText()
-        item_name = self.home_ui.SI_itemNameEbox.toPlainText()
-        item_unit = self.home_ui.SI_itemUnitEbox.toPlainText()
-        item_price = self.home_ui.SI_itemPriceEbox.toPlainText()
-        categoryid = dataRetrieveDB.getCategoryId(self.home_ui.SI_categoryCbox.currentText()) # Due to manipulation we have to get the id from the category name
-        availability = 'Y' if self.home_ui.SI_availCbox.currentText() == 'Available' else 'N'
-        addtl_info = self.home_ui.SI_addInfoEbox.toPlainText()
+        try: # To catch errors interacting with the database without breaking the UI
+            item_name = self.home_ui.SI_itemNameEbox.toPlainText()
+            item_unit = self.home_ui.SI_itemUnitEbox.toPlainText()
+            item_price = self.home_ui.SI_itemPriceEbox.toPlainText()
+            categoryid = dataRetrieveDB.getCategoryId(self.home_ui.SI_categoryCbox.currentText()) # Due to manipulation we have to get the id from the category name
+            availability = 'Y' if self.home_ui.SI_availCbox.currentText() == 'Available' else 'N'
+            addtl_info = self.home_ui.SI_addInfoEbox.toPlainText()
 
-        # Using SQL connectivity layer function to add the record
-        dataRetrieveDB.addStockItem(id, item_name, item_unit, item_price, categoryid, availability, addtl_info)
-        self.load_stock_items() # Refreshing the items in the table
+            # Using SQL connectivity layer function to add the record
+            dataRetrieveDB.addStockItem(item_name, item_unit, item_price, categoryid, availability, addtl_info)
+            self.load_stock_items() # Refreshing the items in the table
+            self.SIaddMode()
+        except:
+            self.input_error_msg()
+    
+    def input_error_msg(self):
+        '''
+        This function displays an error message whenever the user tries to operate the database in a way that is invalid/raises an error.
+        '''
+        message = QMessageBox()
+        message.setText("Cannot complete database operation.")
+        message.setIcon(QMessageBox.Critical)
+        message.setWindowTitle("Invalid input")
+        message.setInformativeText("Please make sure you fill all the relevant values and that they are valid.")
+        message.exec_()
     
     def login(self):
         """
@@ -263,6 +287,7 @@ class MainWindow(QMainWindow):
             message.setIcon(QMessageBox.Information)
             message.setWindowTitle(' ')
             message.exec_()
+
             # Once authenticated we hide the login screen and call the show home screen function
             self.loginScr.hide()
             self.show_home_screen()
@@ -305,6 +330,7 @@ class MainWindow(QMainWindow):
             self.home_ui.SI_table.setItem(row, 5,  QTableWidgetItem(item['available']))
             self.home_ui.SI_table.setItem(row, 6,  QTableWidgetItem(item['itemaddlinfo']))
             row += 1
+        
         # Hiding availability and additional info columns as instructed in requirements
         self.home_ui.SI_table.hideColumn(5)
         self.home_ui.SI_table.hideColumn(6)
@@ -325,10 +351,17 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     '''
-    Initialises the application with a main call to our PyQt5Widget
+    Connecting to DB and initialising the application with a call to our PyQt5Widget
     '''
+
+    # SQL Connection values - Change here if connecting to a remote database, etc
+    server = 0 # Enter 0 for default value or enter actual server name as a string like 'DESKTOP-****\SQLEXPRESS'
+    database = "nfhcw2"
+    uid = "nfhuser" # User to access the database
+    pwd = "nfhuserpwd" # Password to access the database
+
     try:
-        dataRetrieveDB.connectToDB() # Connect to the database before user attempts to log in
+        dataRetrieveDB.connectToDB(server, database,uid,pwd) # Connect to the database before user attempts to log in
         app = QApplication([])
         window = MainWindow()
         app.exec()
